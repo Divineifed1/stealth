@@ -74,17 +74,17 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
         ))}
       </div>
 
-      <div className="ml-auto flex items-center gap-1">
+      <div className="glass-tile ml-auto flex items-center gap-1 rounded-[8px] px-1">
         {/* Filter dropdown */}
         <div ref={filterRef} className="relative">
-          <IconBtn 
-            label="Filter" 
+          <IconBtn
+            label="Filter"
             onClick={() => setFilterOpen(!filterOpen)}
             active={filterOpen || filters.unreadOnly || filters.hasAttachments || filters.dateRange !== "all"}
           >
             <Filter className="h-4 w-4" />
           </IconBtn>
-          
+
           <AnimatePresence>
             {filterOpen && (
               <>
@@ -105,7 +105,7 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
                   <div className="mb-2 px-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                     Filters
                   </div>
-                  
+
                   <FilterToggle
                     icon={Check}
                     label="Unread only"
@@ -118,13 +118,13 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
                     checked={filters.hasAttachments}
                     onChange={(v) => setFilters({ ...filters, hasAttachments: v })}
                   />
-                  
+
                   <div className="my-2 border-t border-white/5" />
-                  
+
                   <div className="mb-2 px-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                     Date range
                   </div>
-                  
+
                   {(["all", "today", "week", "month"] as const).map((range) => (
                     <button
                       key={range}
@@ -140,7 +140,7 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
                       <span className="capitalize">{range === "all" ? "All time" : range === "week" ? "This week" : range === "month" ? "This month" : "Today"}</span>
                     </button>
                   ))}
-                  
+
                   {(filters.unreadOnly || filters.hasAttachments || filters.dateRange !== "all") && (
                     <>
                       <div className="my-2 border-t border-white/5" />
@@ -161,8 +161,8 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
 
         {/* Notifications */}
         <div className="relative">
-          <IconBtn 
-            label="Notifications" 
+          <IconBtn
+            label="Notifications"
             onClick={() => setNotificationsOpen(!notificationsOpen)}
             active={notificationsOpen}
           >
@@ -171,10 +171,10 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
               <span className="pulse-dot absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-[oklch(0.85_0.005_270)]" />
             </span>
           </IconBtn>
-          
-          <NotificationsPanel 
-            open={notificationsOpen} 
-            onClose={() => setNotificationsOpen(false)} 
+
+          <NotificationsPanel
+            open={notificationsOpen}
+            onClose={() => setNotificationsOpen(false)}
           />
         </div>
 
@@ -182,22 +182,22 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
         <IconBtn label="Settings" onClick={onOpenSettings}>
           <Settings className="h-4 w-4" />
         </IconBtn>
-        
-        <div className="mx-2 h-6 w-px bg-white/10" />
-        
+
+        <div className="mx-1 h-6 w-px bg-white/10" />
+
         {/* Account menu */}
         <div ref={accountRef} className="relative">
-          <button 
+          <button
             onClick={() => setAccountOpen(!accountOpen)}
             className={cn(
-              "flex items-center gap-2 rounded-lg border border-white/5 bg-white/[0.04] px-2 py-1.5 text-xs text-foreground transition hover:bg-white/[0.08]",
+              "flex items-center gap-2 rounded-[6px] border border-white/5 bg-white/[0.04] px-2 py-1.5 text-xs text-foreground transition hover:bg-white/[0.08]",
               accountOpen && "bg-white/[0.08]"
             )}
           >
             <span className="h-5 w-5 rounded-full" style={{ background: "linear-gradient(135deg,#7a8290,#2b2b31)" }} />
             <span className="hidden sm:inline">Personal</span>
           </button>
-          
+
           <AnimatePresence>
             {accountOpen && (
               <>
@@ -227,33 +227,33 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Menu items */}
                   <div className="p-1">
-                    <AccountMenuItem 
-                      icon={User} 
-                      label="Profile" 
+                    <AccountMenuItem
+                      icon={User}
+                      label="Profile"
                       onClick={() => {
                         setAccountOpen(false);
                         onOpenSettings();
-                      }} 
+                      }}
                     />
-                    <AccountMenuItem 
-                      icon={RefreshCw} 
-                      label="Switch account" 
+                    <AccountMenuItem
+                      icon={RefreshCw}
+                      label="Switch account"
                       onClick={() => {
                         setAccountOpen(false);
                         onShowToast("Account switching coming soon");
-                      }} 
+                      }}
                     />
                     <div className="my-1 border-t border-white/5" />
-                    <AccountMenuItem 
-                      icon={LogOut} 
-                      label="Sign out" 
+                    <AccountMenuItem
+                      icon={LogOut}
+                      label="Sign out"
                       onClick={() => {
                         setAccountOpen(false);
                         onShowToast("Signed out successfully");
-                      }} 
+                      }}
                     />
                   </div>
                 </motion.div>
@@ -279,14 +279,14 @@ export function Topbar({ onOpenPalette, onOpenSettings, onShowToast }: TopbarPro
   );
 }
 
-function IconBtn({ 
-  children, 
-  label, 
-  onClick, 
-  active 
-}: { 
-  children: React.ReactNode; 
-  label: string; 
+function IconBtn({
+  children,
+  label,
+  onClick,
+  active,
+}: {
+  children: React.ReactNode;
+  label: string;
   onClick?: () => void;
   active?: boolean;
 }) {
@@ -296,7 +296,7 @@ function IconBtn({
       aria-label={label}
       onClick={onClick}
       className={cn(
-        "rounded-lg p-2 text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground",
+        "rounded-[6px] p-2 text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground",
         active && "bg-white/[0.06] text-foreground"
       )}
     >
@@ -310,11 +310,11 @@ function QuickAction({ icon: Icon, label, value }: { icon: LucideIcon; label: st
     <motion.button
       whileTap={{ scale: 0.94 }}
       aria-label={label}
-      className="group flex h-9 items-center gap-2 rounded-md border border-white/[0.07] bg-white/[0.035] px-2.5 text-xs text-muted-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.045)] transition hover:border-white/[0.12] hover:bg-white/[0.07] hover:text-foreground"
+      className="group glass-tile flex h-9 items-center gap-2 rounded-[6px] px-2.5 text-xs text-muted-foreground transition hover:text-foreground"
     >
       <Icon className="h-4 w-4" />
       <span className="hidden lg:inline">{label}</span>
-      <span className="rounded border border-white/[0.08] bg-black/20 px-1.5 py-0.5 font-mono text-[10px] text-foreground/80">
+      <span className="rounded-[4px] border border-white/[0.08] bg-black/20 px-1.5 py-0.5 font-mono text-[10px] text-foreground/80">
         {value}
       </span>
     </motion.button>
