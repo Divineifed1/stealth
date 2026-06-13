@@ -73,9 +73,9 @@ export function RightPanel({
       <Card>
         <SectionHeader icon={ArrowUpRight} title="Quick actions" />
         <div className="mt-3 grid grid-cols-2 gap-2">
-          {["Snooze", "Translate", "Schedule", "Summarize"].map((a) => (
+          {(["snooze", "translate", "schedule", "summarize"] as const).map((action) => (
             <motion.button
-              key={a}
+              key={action}
               whileHover={{ y: -1 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => onShowToast(`${a} action applied`)}
