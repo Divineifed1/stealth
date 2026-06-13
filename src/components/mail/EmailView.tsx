@@ -327,7 +327,6 @@ export function EmailView({
                 </motion.div>
               )}
             </AnimatePresence>
-
           </motion.div>
         )}
       </AnimatePresence>
@@ -335,7 +334,13 @@ export function EmailView({
   );
 }
 
-function ProtocolStatus({ email, onShowToast }: { email: Email; onShowToast?: (message: string) => void }) {
+function ProtocolStatus({
+  email,
+  onShowToast,
+}: {
+  email: Email;
+  onShowToast?: (message: string) => void;
+}) {
   const verified = ["verified", "priority", "encrypted", "receipts"].includes(email.folder);
   const proof = `${email.id.padStart(2, "0")}c7...${email.from.length.toString(16)}a9`;
 
