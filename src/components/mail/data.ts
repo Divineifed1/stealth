@@ -110,7 +110,8 @@ export function getFolderLabel(folder: MailFolder) {
 }
 
 export function getEmailsForFolder(allEmails: Email[], folder: MailFolder) {
-  if (folder === "all") return allEmails.filter((email) => email.folder !== "spam" && email.folder !== "trash");
+  if (folder === "all")
+    return allEmails.filter((email) => email.folder !== "spam" && email.folder !== "trash");
   if (folder === "starred") return allEmails.filter((email) => email.starred);
   if (folder === "inbox") return allEmails.filter((email) => inboxLocations.has(email.folder));
   return allEmails.filter((email) => email.folder === folder);
@@ -125,7 +126,8 @@ export const emails: Email[] = [
     from: "Lina Park",
     email: "lina*vantage.studio",
     subject: "Q2 brand system - final direction",
-    preview: "Sharing the refined exploration for the new identity. The monochrome system feels strongest...",
+    preview:
+      "Sharing the refined exploration for the new identity. The monochrome system feels strongest...",
     body: "Hey,\n\nSharing the refined exploration for the new identity. The monochrome system feels strongest across product surfaces. I've attached the latest spec sheet and the motion principles deck.\n\nLet me know your thoughts before Friday's review.\n\nLina",
     time: "9:42 AM",
     unread: true,
