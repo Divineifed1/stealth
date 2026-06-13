@@ -249,7 +249,7 @@ export function Compose({
                   ))}
                 </div>
               )}
-              
+
               {/* AI Suggestion */}
               <motion.div
                 initial={{ opacity: 0, y: 4 }}
@@ -258,8 +258,10 @@ export function Compose({
                 className="mt-2 flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-[11px] text-muted-foreground"
               >
                 <Sparkles className="h-3.5 w-3.5 shrink-0" />
-                <span className="min-w-0 flex-1 truncate">AI suggests: &quot;{aiSuggestion}&quot;</span>
-                <button 
+                <span className="min-w-0 flex-1 truncate">
+                  AI suggests: &quot;{aiSuggestion}&quot;
+                </span>
+                <button
                   onClick={() => insertAtCursor(aiSuggestion)}
                   className="shrink-0 rounded-md border border-white/10 bg-white/[0.06] px-2 py-0.5 text-[10px] text-foreground/90 transition hover:bg-white/[0.1]"
                 >
