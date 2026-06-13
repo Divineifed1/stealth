@@ -352,7 +352,10 @@ function ProtocolStatus({
       </span>
       <span className="font-mono text-[10px] text-muted-foreground">{proof}</span>
       <button
-        onClick={() => onShowToast?.(`Proof ${proof} copied`)}
+        onClick={async () => {
+          await navigator.clipboard?.writeText(proof);
+          onShowToast?.(`Proof ${proof} copied`);
+        }}
         className="ml-auto rounded-md border border-white/10 bg-white/[0.04] px-2 py-1 text-[10px] text-muted-foreground transition hover:text-foreground"
       >
         Copy proof
@@ -412,9 +415,12 @@ function getAttachmentIcon(type: string): { icon: LucideIcon; className: string 
   if (normalized === "pdf") return { icon: FileText, className: "text-red-300" };
   if (normalized === "key") return { icon: KeyRound, className: "text-sky-200" };
   if (normalized === "json") return { icon: Braces, className: "text-emerald-200" };
-  if (["png", "jpg", "jpeg", "gif", "webp"].includes(normalized)) return { icon: Image, className: "text-violet-200" };
-  if (["zip", "rar", "7z"].includes(normalized)) return { icon: FileArchive, className: "text-amber-200" };
-  if (["xls", "xlsx", "csv"].includes(normalized)) return { icon: Table2, className: "text-green-200" };
+  if (["png", "jpg", "jpeg", "gif", "webp"].includes(normalized))
+    return { icon: Image, className: "text-violet-200" };
+  if (["zip", "rar", "7z"].includes(normalized))
+    return { icon: FileArchive, className: "text-amber-200" };
+  if (["xls", "xlsx", "csv"].includes(normalized))
+    return { icon: Table2, className: "text-green-200" };
   return { icon: File, className: "text-slate-200" };
 }
 
