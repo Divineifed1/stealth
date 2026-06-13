@@ -190,7 +190,9 @@ export function EmailView({
                   title={email.starred ? "Unstar" : "Star"}
                   className={cn(
                     "rounded-md p-2 transition hover:bg-white/[0.06]",
-                    email.starred ? "text-amber-300" : "text-muted-foreground hover:text-foreground"
+                    email.starred
+                      ? "text-amber-300"
+                      : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   <Star className={cn("h-4 w-4", email.starred && "fill-current")} />
@@ -221,7 +223,9 @@ export function EmailView({
                   </div>
                 </div>
 
-                {email.event ? <EventMailCard event={email.event} /> : null}
+                {email.event ? (
+                  <EventMailCard event={email.event} onAdd={() => actions.onAddEvent?.(email)} />
+                ) : null}
 
                 <ProtocolStatus email={email} onShowToast={actions.onShowToast} />
 
