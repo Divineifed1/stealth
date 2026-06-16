@@ -5,13 +5,14 @@ import { Sidebar } from "@/components/mail/Sidebar";
 import { Topbar } from "@/components/mail/Topbar";
 import { EmailList } from "@/components/mail/EmailList";
 import { EmailView } from "@/components/mail/EmailView";
-import { Compose, type ComposeSubmission } from "@/components/mail/Compose";
+import { Compose } from "@/components/mail/Compose";
+import type { ComposeSubmission } from "@/components/mail/composeValidation";
 import { RightPanel, type ContextAction } from "@/components/mail/RightPanel";
-import { CommandPalette } from "@/components/mail/CommandPalette";
 import { SettingsModal } from "@/components/mail/SettingsModal";
 import { AttachmentPreviewDrawer } from "@/components/mail/AttachmentPreviewDrawer";
 import {
   defaultMailFilters,
+  deriveProof,
   emails as initialEmails,
   getEmailsForFolder,
   mailFolders,
@@ -24,6 +25,7 @@ import { CalendarWorkspace, useCalendar } from "@/features/calendar";
 import { FeedbackViewport } from "@/features/design-system/feedback/feedback-viewport";
 import { useFeedback } from "@/features/design-system/feedback/use-feedback";
 import { OnboardingModal, draftToMailboxPolicy, type OnboardingDraft } from "@/features/onboarding";
+import { ImportWizard, type ImportedContact } from "@/features/contacts";
 import {
   SenderConversionDialog,
   resolveSenderConversion,
@@ -31,6 +33,16 @@ import {
   type SenderConversionTarget,
   type SenderPolicyChoice,
 } from "@/features/sender-conversion";
+import {
+  SnoozeDialog,
+  formatSnoozeSummary,
+  snoozePatch,
+  unsnoozePatch,
+  useSnooze,
+  type SnoozeTarget,
+} from "@/features/snooze";
+import type { SnoozeState } from "@/components/mail/data";
+import { useIsMobile } from "@/lib/use-media-query";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -44,10 +56,37 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  component: MailApp,
+  component: IndexPage,
 });
 
-function MailApp() {
+function IndexPage() {
+  const [authMode, setAuthMode] = useState<"logged-out" | "demo" | "authenticated">("logged-out");
+  const { state: freighterState, connect } = useFreighter();
+
+  const handleConnectWallet = async () => {
+    const address = await connect();
+    if (address) {
+      setAuthMode("authenticated");
+    } else if (freighterState.status === "error" || freighterState.status === "unavailable") {
+      // Fallback for demo purposes if wallet isn't available
+      // In a real app we might show a toast, but here we can just alert or force auth
+      alert("Wallet connection failed or unavailable. Please use demo mode for now.");
+    }
+  };
+
+  if (authMode === "logged-out") {
+    return (
+      <LandingScreen
+        onConnectWallet={handleConnectWallet}
+        onExploreDemo={() => setAuthMode("demo")}
+      />
+    );
+  }
+
+  return <MailApp isDemoMode={authMode === "demo"} onSignOut={() => setAuthMode("logged-out")} />;
+}
+
+function MailApp({ isDemoMode, onSignOut }: { isDemoMode?: boolean; onSignOut?: () => void }) {
   const [folder, setFolder] = useState<MailFolder>("inbox");
   const [emails, setEmails] = useState<Email[]>(initialEmails);
   const [selectedId, setSelectedId] = useState<string | null>(initialEmails[0].id);
@@ -60,6 +99,7 @@ function MailApp() {
   }>({});
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [customFolder, setCustomFolder] = useState<string | null>(null);
   const [filters, setFilters] = useState<MailFilters>(defaultMailFilters);
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -75,14 +115,9 @@ function MailApp() {
 
   // Gate: show onboarding only after localStorage has been read (hydrated) and only
   // when it has not been completed in a previous session.
-  const showOnboarding = hydrated && !preferences.onboardingCompleted;
+  // In demo mode, we might want to skip onboarding or mock it.
+  const showOnboarding = hydrated && !preferences.onboardingCompleted && !isDemoMode;
 
-  /**
-   * Called by OnboardingModal once all 7 steps are complete.
-   * 1. Submits the mailbox policy to the protocol API.
-   * 2. Merges the draft into local UiPreferences so Settings reflects the same values.
-   * Errors propagate back to PolicyReviewStep for inline display (no silent swallow).
-   */
   const handleOnboardingComplete = useCallback(
     async (walletAddress: string, draft: OnboardingDraft) => {
       const policy = draftToMailboxPolicy(draft);
@@ -116,6 +151,14 @@ function MailApp() {
   );
   const calendar = useCalendar();
   const { dismiss: dismissFeedback, items: feedbackItems, notify: showToast } = useFeedback();
+
+  const handleImportSave = useCallback(
+    (contacts: ImportedContact[]) => {
+      setImportOpen(false);
+      showToast(`${contacts.length} contact${contacts.length !== 1 ? "s" : ""} imported`);
+    },
+    [showToast],
+  );
 
   const folderCounts = useMemo(
     () =>
@@ -154,6 +197,34 @@ function MailApp() {
     const result = resolveSenderConversion(email, choice);
     updateEmail(email.id, result.patch);
     showToast(result.toast.message, { tone: result.toast.tone });
+  };
+
+  // Snooze opens the guided dialog; nothing changes until the user confirms.
+  const openSnooze = (e: Email) => snooze.open({ emailId: e.id, subject: e.subject });
+
+  const handleSnooze = (target: SnoozeTarget, state: SnoozeState) => {
+    updateEmail(target.emailId, snoozePatch(state));
+    snooze.close();
+    showToast(formatSnoozeSummary(state), { tone: "success" });
+  };
+
+  const handleUnsnooze = (e: Email) => {
+    updateEmail(e.id, unsnoozePatch());
+    showToast(`"${e.subject}" returned to your inbox`);
+  };
+
+  const handleArchive = (e: Email) => {
+    updateEmail(e.id, { folder: "archive" });
+    showToast(`"${e.subject}" archived`);
+  };
+
+  const handleStar = (e: Email) => {
+    updateEmail(e.id, { starred: !e.starred });
+    showToast(e.starred ? `Unstarred "${e.subject}"` : `Starred "${e.subject}"`);
+  };
+
+  const handleMobileSnooze = (e: Email) => {
+    openSnooze(e);
   };
 
   const quoteBody = (e: Email) =>
@@ -201,6 +272,8 @@ function MailApp() {
       showToast(e.starred ? "Removed star" : "Starred");
     },
     onConvertSender: openSenderConversion,
+    onSnooze: openSnooze,
+    onUnsnooze: handleUnsnooze,
     onShowToast: showToast,
     onAddEvent: (e: Email) => {
       if (!e.event) return;
@@ -221,11 +294,7 @@ function MailApp() {
   };
 
   const handleContextAction = (action: ContextAction, email: Email) => {
-    if (action === "snooze") {
-      updateEmail(email.id, { folder: "snoozed", time: "Tomorrow" });
-      showToast(`Snoozed "${email.subject}" until tomorrow`);
-      return;
-    }
+    // Snooze is handled by the guided dialog via onSnooze, not here.
     if (action === "schedule") {
       openCompose({
         to: email.email,
@@ -310,6 +379,11 @@ function MailApp() {
   return (
     <div className="relative min-h-screen text-foreground">
       <AmbientBackground />
+      {isDemoMode && (
+        <div className="absolute top-0 inset-x-0 z-50 bg-primary/20 backdrop-blur-md border-b border-primary/30 py-1 text-center text-xs font-medium text-primary shadow-sm pointer-events-none">
+          Demo Mode: Showing placeholder data.
+        </div>
+      )}
 
       <div className="flex min-h-screen">
         <Sidebar
@@ -330,7 +404,9 @@ function MailApp() {
           <Topbar
             onOpenPalette={() => setPaletteOpen(true)}
             onOpenSettings={() => setSettingsOpen(true)}
+            onImportContacts={() => setImportOpen(true)}
             onShowToast={showToast}
+            onSignOut={onSignOut}
             filters={filters}
             onFiltersChange={setFilters}
             onQuickAction={(action) => {
@@ -359,14 +435,20 @@ function MailApp() {
               customFolder={customFolder}
               compact={preferences.compactMode}
               showAvatars={preferences.showAvatars}
+              useMobile={isMobile}
+              onArchive={handleArchive}
+              onStar={handleStar}
+              onSnooze={handleMobileSnooze}
             />
             <EmailView email={selected} actions={emailActions} />
             <RightPanel
               email={selected}
               onAction={handleContextAction}
               onConvertSender={openSenderConversion}
+              onSnooze={openSnooze}
               calendarEvents={calendar.visibleEvents}
               calendars={calendar.calendars}
+              onShowToast={showToast}
               onOpenCalendar={(eventId) => {
                 setCalendarEventId(eventId ?? null);
                 setCalendarOpen(true);
@@ -411,24 +493,20 @@ function MailApp() {
       <CommandPalette
         open={paletteOpen}
         onClose={() => setPaletteOpen(false)}
-        onCompose={() => openCompose()}
+        context={{ email: selected, folder }}
+        emails={emails}
+        onRunCommand={runCommand}
         onNavigate={(f) => {
           setFolder(f);
           setCustomFolder(null);
         }}
-        onArchive={() => {
-          if (selected) {
-            emailActions.onArchive(selected);
-          }
-        }}
-        onOpenSettings={() => setSettingsOpen(true)}
-        emails={emails}
         onSelectEmail={(email) => {
           setCustomFolder(null);
           setFilters(defaultMailFilters);
           setFolder(email.folder);
           setSelectedId(email.id);
         }}
+        onOpenSettings={() => setSettingsOpen(true)}
       />
       <CalendarWorkspace
         open={calendarOpen}
@@ -448,6 +526,12 @@ function MailApp() {
       />
 
       <FeedbackViewport items={feedbackItems} onDismiss={dismissFeedback} />
+
+      <ImportWizard
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        onSave={handleImportSave}
+      />
 
       <OnboardingModal open={showOnboarding} onComplete={handleOnboardingComplete} />
 
