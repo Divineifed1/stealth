@@ -27,6 +27,7 @@ const NAV_ITEMS: DashboardNavItem[] = [
   { id: "events", label: "Events", description: "Demo calendar and protocol events" },
   { id: "templates", label: "Templates", description: "Pick message templates to populate drafts" },
   { id: "audit", label: "Audit", description: "Demo protocol event log" },
+  { id: "analytics", label: "Analytics", description: "Privacy-preserving product analytics" },
 ];
 
 const OVERVIEW_STATS: StatCard[] = [
@@ -163,6 +164,7 @@ const SECTION_ICON: Record<DashboardSection, React.ElementType> = {
   events: Calendar,
   templates: FileText,
   audit: Activity,
+  analytics: PieChart,
 };
 
 // ─── Content region components ────────────────────────────────────────────────
