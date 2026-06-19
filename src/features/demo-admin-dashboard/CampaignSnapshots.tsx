@@ -66,7 +66,7 @@ export function CampaignSnapshots({ currentDataset, onRestoreDataset }: Campaign
         `This will replace the current ${currentDataset.length} drafts with the ${snapshot.draftCount} drafts from "${snapshot.name}". Are you sure?`,
       )
     ) {
-      onRestoreDataset(snapshot.data);
+      onRestoreDataset(snapshot.data ?? []);
     }
   };
 
@@ -118,9 +118,9 @@ export function CampaignSnapshots({ currentDataset, onRestoreDataset }: Campaign
                 <div className="flex items-center gap-3 mt-1 text-[11px] text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />
-                    {new Date(snapshot.createdAt).toLocaleString()}
+                    {snapshot.createdAt ? new Date(snapshot.createdAt).toLocaleString() : "N/A"}
                   </span>
-                  <span>{snapshot.draftCount} drafts</span>
+                  <span>{snapshot.draftCount ?? 0} drafts</span>
                 </div>
               </div>
               <div className="flex items-center gap-2">

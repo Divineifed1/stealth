@@ -3,13 +3,13 @@ import { generateDemoMessages } from "./messageGeneration";
 import { fakePersonas } from "./fixtures";
 import type { MessageTemplate, TemplateCategory } from "./templates/types";
 import { CAMPAIGN_TEMPLATES as messageTemplates } from "./fixtures/campaignFixtures";
-import type { CampaignTemplate } from "./fixtures/campaignFixtures";
+import type { CampaignTemplate, CampaignChecklistItem } from "./types/campaign";
 
 /** Converts campaign templates into a flat list of message templates for testing. */
 const getTestTemplates = (campaignTemplates: CampaignTemplate[]): MessageTemplate[] => {
   return campaignTemplates.flatMap((t) =>
     t.checklist.map(
-      (c): MessageTemplate => ({
+      (c: CampaignChecklistItem): MessageTemplate => ({
         id: c.id,
         name: c.label,
         subject: c.label,
