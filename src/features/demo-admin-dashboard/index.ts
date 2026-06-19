@@ -326,6 +326,7 @@ export {
 export { validateInboxSeedDataset } from "./seedDatasetValidation";
 export { getSeedDatasetPreview } from "./utils/seedDatasetPreview";
 export type { SeedDatasetPreview } from "./utils/seedDatasetPreview";
+export {
   DEMO_FOLDERS,
   MAILBOX_GROUPS,
   FOLDER_DEFINITIONS,
