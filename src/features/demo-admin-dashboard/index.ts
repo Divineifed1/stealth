@@ -245,6 +245,30 @@ export type { DraftDatasetExport } from "./types/datasetExport";
 export { ExportDatasetButton } from "./components/ExportDatasetButton";
 export type { ExportDatasetButtonProps } from "./components/ExportDatasetButton";
 
+// Campaign KPI definitions (issue #262): types, fixtures, helpers, display tokens.
+export type {
+  CampaignKpiDefinition,
+  KpiMetricKind,
+  KpiStatus,
+  KpiTrend,
+  KpiUnit,
+} from "./types/campaignKpi";
+export { CAMPAIGN_KPI_DEFINITIONS } from "./fixtures/campaignKpiFixtures";
+export {
+  computeKpiProgress,
+  getKpiById,
+  getKpisForCampaign,
+  isKpiMet,
+  sortKpisByMetric,
+  validateCampaignKpiDefinition,
+} from "./utils/campaignKpiHelpers";
+export {
+  KPI_METRIC_TOKENS,
+  KPI_STATUS_TOKENS,
+  getKpiMetricToken,
+  getKpiStatusToken,
+} from "./constants/displayTokens";
+
 export {
   MESSAGE_FOLDERS,
   DEFAULT_MESSAGE_FOLDER,
