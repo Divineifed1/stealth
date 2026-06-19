@@ -96,6 +96,18 @@ export {
   type TemplateCategory,
 } from "./templates";
 
+export type { CampaignSeedExample, CampaignSeedScenario } from "./types/campaignSeed";
+export {
+  campaignSeedExamples,
+  getCampaignSeedExamplesByCategory,
+  getCampaignSeedExamplesByTag,
+} from "./seed-data/campaignSeedExamples";
+export {
+  isSafeDemoRecipient,
+  toCampaignSeedSlug,
+  validateCampaignSeedScenario,
+} from "./seed-helpers/campaignSeed";
+
 export * from "./validation-types";
 export * from "./validation";
 export * from "./validationFixtures";
