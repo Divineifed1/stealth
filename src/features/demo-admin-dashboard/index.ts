@@ -337,3 +337,12 @@ export {
 export type { DemoFolder, MailboxGroup, FolderDefinition } from "./constants/folderTaxonomy";
 export { FolderTaxonomySelector } from "./components/FolderTaxonomySelector";
 export type { FolderTaxonomySelectorProps } from "./components/FolderTaxonomySelector";
+
+// Campaign snapshot JSON export (issue #273): serializer, filename builder.
+export {
+  buildCampaignExport,
+  serializeCampaignSnapshot,
+  buildCampaignExportFilename,
+} from "./helpers/campaignExport";
+export { CAMPAIGN_EXPORT_SCHEMA_VERSION } from "./types/campaignExport";
+export type { CampaignExportMeta, CampaignSnapshotExport } from "./types/campaignExport";
