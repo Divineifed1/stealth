@@ -387,7 +387,6 @@ export type { DemoFolder, MailboxGroup, FolderDefinition } from "./constants/fol
 export { FolderTaxonomySelector } from "./components/FolderTaxonomySelector";
 export type { FolderTaxonomySelectorProps } from "./components/FolderTaxonomySelector";
 
-
 // Campaign snapshot JSON export (issue #273): serializer, filename builder.
 export {
   buildCampaignExport,
