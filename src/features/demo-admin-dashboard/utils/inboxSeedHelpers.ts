@@ -13,14 +13,9 @@ import { inboxSeedFolderMap } from "../fixtures/inboxSeedMetadata";
 // ---------------------------------------------------------------------------
 
 /** Returns messages whose labels include `label` (case-insensitive). */
-export function getMessagesByLabel(
-  messages: readonly DemoMessage[],
-  label: string,
-): DemoMessage[] {
+export function getMessagesByLabel(messages: readonly DemoMessage[], label: string): DemoMessage[] {
   const needle = label.toLowerCase();
-  return messages.filter((m) =>
-    m.labels.some((l) => l.toLowerCase() === needle),
-  );
+  return messages.filter((m) => m.labels.some((l) => l.toLowerCase() === needle));
 }
 
 /** Returns messages from a specific sender address (exact, case-insensitive). */
@@ -49,37 +44,27 @@ export function getMessagesByFolder(
 }
 
 /** Returns only unread messages. */
-export function getUnreadMessages(
-  messages: readonly DemoMessage[],
-): DemoMessage[] {
+export function getUnreadMessages(messages: readonly DemoMessage[]): DemoMessage[] {
   return messages.filter((m) => !m.isRead);
 }
 
 /** Returns only starred messages. */
-export function getStarredMessages(
-  messages: readonly DemoMessage[],
-): DemoMessage[] {
+export function getStarredMessages(messages: readonly DemoMessage[]): DemoMessage[] {
   return messages.filter((m) => m.isStarred);
 }
 
 /** Returns messages that carry at least one attachment. */
-export function getMessagesWithAttachments(
-  messages: readonly DemoMessage[],
-): DemoMessage[] {
+export function getMessagesWithAttachments(messages: readonly DemoMessage[]): DemoMessage[] {
   return messages.filter((m) => m.attachments.length > 0);
 }
 
 /** Returns messages that carry a calendar event. */
-export function getMessagesWithCalendarEvent(
-  messages: readonly DemoMessage[],
-): DemoMessage[] {
+export function getMessagesWithCalendarEvent(messages: readonly DemoMessage[]): DemoMessage[] {
   return messages.filter((m) => m.calendarEvent != null);
 }
 
 /** Returns messages that are snoozed (have a snoozeRemindAt). */
-export function getSnoozedMessages(
-  messages: readonly DemoMessage[],
-): DemoMessage[] {
+export function getSnoozedMessages(messages: readonly DemoMessage[]): DemoMessage[] {
   return messages.filter((m) => m.snoozeRemindAt != null);
 }
 

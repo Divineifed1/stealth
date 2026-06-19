@@ -52,7 +52,7 @@ describe("inboxSeedDataset — safety", () => {
 
   it("no message body contains a real-looking private key or secret", () => {
     const SECRET_PATTERNS = [
-      /S[A-Z0-9]{55}/,   // Stellar secret key
+      /S[A-Z0-9]{55}/, // Stellar secret key
       /-----BEGIN.*PRIVATE KEY-----/,
       /sk_[a-zA-Z0-9]{20,}/,
     ];
@@ -305,8 +305,7 @@ describe("inboxSeedHelpers", () => {
 
     it("trusted + untrusted counts sum to total senders", () => {
       expect(
-        getTrustedSenders(inboxSeedSenders).length +
-          getUntrustedSenders(inboxSeedSenders).length,
+        getTrustedSenders(inboxSeedSenders).length + getUntrustedSenders(inboxSeedSenders).length,
       ).toBe(inboxSeedSenders.length);
     });
   });

@@ -308,8 +308,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-02",
     threadId: "thread-02",
     subject: "TOKEN2049 Abu Dhabi - founder pass ready",
-    snippet:
-      "Your event pass, agenda window, and wallet reminder are ready for Abu Dhabi...",
+    snippet: "Your event pass, agenda window, and wallet reminder are ready for Abu Dhabi...",
     body: "Your TOKEN2049 Abu Dhabi founder pass is ready.\n\nDate: April 21, 2026\nTime: 9:00 AM GST\nVenue: Abu Dhabi Global Market\nPass: Founder access\n\nAdd the event to keep side sessions, badge pickup, and wallet reminders in one place.",
     sender: senderToken2049,
     recipients: ["eve@stealth.xyz"],
@@ -326,8 +325,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-03",
     threadId: "thread-03",
     subject: "Your relay verification code",
-    snippet:
-      "Use the one-time passkey below to authorize this relay session...",
+    snippet: "Use the one-time passkey below to authorize this relay session...",
     body: "Hi Eve,\n\nA new relay session is requesting authorization on Node 07. Use the one-time passkey below to confirm it's you.\n\nYour OTP code: 482 015\n\nThis code expires in 10 minutes. If you didn't initiate this, ignore the message and your session will stay locked.\n\n— Relay Node 07",
     sender: senderRelay07,
     recipients: ["eve@stealth.xyz"],
@@ -344,8 +342,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-04",
     threadId: "thread-04",
     subject: "Investor update and postage policy",
-    snippet:
-      "The paid-inbox model makes sense. Can you send over the sender-tier thresholds...",
+    snippet: "The paid-inbox model makes sense. Can you send over the sender-tier thresholds...",
     body: "The paid-inbox model makes sense.\n\nCan you send over the sender-tier thresholds and how postage refunds work for approved contacts? I want to understand what happens when a verified sender is whitelisted.",
     sender: senderUthaimin,
     recipients: ["eve@stealth.xyz"],
@@ -367,8 +364,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-05",
     threadId: "thread-05",
     subject: "Message request awaiting approval",
-    snippet:
-      "This sender paid postage but is not in your trusted contacts yet...",
+    snippet: "This sender paid postage but is not in your trusted contacts yet...",
     body: "This sender paid postage but is not in your trusted contacts yet.\n\nApprove the request to decrypt future messages automatically, or reject it to keep the address quarantined.",
     sender: senderUnknown,
     recipients: ["eve@stealth.xyz"],
@@ -385,8 +381,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-05b",
     threadId: "thread-05b",
     subject: "Grant application review",
-    snippet:
-      "We've completed the initial screening of your GrantFox application...",
+    snippet: "We've completed the initial screening of your GrantFox application...",
     body: "We've completed the initial screening of your GrantFox application and would like to proceed with the technical review.\n\nPlease approve this request so we can schedule the dev walkthrough and share the assessment criteria.",
     sender: senderStellarFund,
     recipients: ["eve@stealth.xyz"],
@@ -450,8 +445,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-06b",
     threadId: "thread-06b",
     subject: "Sealed proposal — open to verify",
-    snippet:
-      "Unlock the encrypted envelope to read the funding proposal...",
+    snippet: "Unlock the encrypted envelope to read the funding proposal...",
     body: "Unlock the encrypted envelope to read the funding proposal. The payload is sealed with your registered public key.",
     sender: senderKael,
     recipients: ["eve@stealth.xyz"],
@@ -473,8 +467,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-06c",
     threadId: "thread-06c",
     subject: "Verifying message integrity...",
-    snippet:
-      "Integrity check is running. Stand by for the decrypted payload.",
+    snippet: "Integrity check is running. Stand by for the decrypted payload.",
     body: "Integrity check is running. Stand by for the decrypted payload.",
     sender: senderCipherRelay,
     recipients: ["eve@stealth.xyz"],
@@ -496,8 +489,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-06d",
     threadId: "thread-06d",
     subject: "Decryption failed — payload corrupted",
-    snippet:
-      "The payload failed integrity verification. Possible relay tampering detected.",
+    snippet: "The payload failed integrity verification. Possible relay tampering detected.",
     body: "The payload failed integrity verification. Possible relay tampering detected.",
     sender: senderVaultNode,
     recipients: ["eve@stealth.xyz"],
@@ -514,8 +506,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-07",
     threadId: "thread-07",
     subject: "Delivery receipt settled",
-    snippet:
-      "Soroban receipt confirmed read proof for message 48fb...c29a...",
+    snippet: "Soroban receipt confirmed read proof for message 48fb...c29a...",
     body: "Delivery receipt settled.\n\nMessage: 48fb...c29a\nContract: CCL2...9DME\nEvent: read_proof\nFee: 0.00002 XLM",
     sender: senderReceiptContract,
     recipients: ["eve@stealth.xyz"],
@@ -532,8 +523,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-08",
     threadId: "thread-08",
     subject: "Studio visit next Thursday?",
-    snippet:
-      "Snoozed until tomorrow. Aria wants to show the new prints in person...",
+    snippet: "Snoozed until tomorrow. Aria wants to show the new prints in person...",
     body: "Would love to show you the new prints in person. We're in the Mission until the end of the month.\n\nSnoozing this so it comes back tomorrow morning.",
     sender: senderAriaVoss,
     recipients: ["eve@stealth.xyz"],
@@ -551,8 +541,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-09",
     threadId: "thread-09",
     subject: "Re: Architecture review notes",
-    snippet:
-      "Thanks for the deep dive yesterday. A few follow-ups on the edge runtime concerns...",
+    snippet: "Thanks for the deep dive yesterday. A few follow-ups on the edge runtime concerns...",
     body: "Thanks for the deep dive yesterday. A few follow-ups on the edge runtime concerns we discussed. I think we can resolve most of them with a thin adapter layer.\n\nHappy to pair on it tomorrow.",
     sender: senderMarcusChen,
     recipients: ["eve@stealth.xyz"],
@@ -568,8 +557,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-10",
     threadId: "thread-10",
     subject: "Re: Co-marketing proposal",
-    snippet:
-      "Sent with verified postage and memo hash 8d31...5b9c...",
+    snippet: "Sent with verified postage and memo hash 8d31...5b9c...",
     body: "Thanks Daniela,\n\nThis sounds useful. I sent over the launch calendar and the partner guidelines. The on-chain memo for this message is 8d31...5b9c.\n\nEve",
     sender: senderEve,
     recipients: ["daniela@example.org"],
@@ -585,8 +573,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-11",
     threadId: "thread-11",
     subject: "Protocol launch notes",
-    snippet:
-      "Draft saved locally. Add sender-verification screenshots before sending...",
+    snippet: "Draft saved locally. Add sender-verification screenshots before sending...",
     body: "Launch notes:\n\n- Explain Stellar federation in one paragraph\n- Show paid inbox settings\n- Add proof badge states\n- Include migration path for SMTP contacts",
     sender: senderEve,
     recipients: [],
@@ -602,8 +589,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-12",
     threadId: "thread-12",
     subject: "Founder update - scheduled",
-    snippet:
-      "Scheduled for tomorrow at 8:00 AM with minimum postage attached...",
+    snippet: "Scheduled for tomorrow at 8:00 AM with minimum postage attached...",
     body: "This founder update is scheduled for tomorrow at 8:00 AM.\n\nMinimum postage is attached and the memo hash will be generated at send time.",
     sender: senderEve,
     recipients: ["investors@example.org"],
@@ -620,8 +606,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-13",
     threadId: "thread-13",
     subject: "Waiting for wallet signature",
-    snippet:
-      "One message is ready but still needs a Stellar wallet signature...",
+    snippet: "One message is ready but still needs a Stellar wallet signature...",
     body: "One message is ready to leave your outbox.\n\nStatus: waiting for wallet signature\nAction: approve transaction\nPostage: 0.00001 XLM",
     sender: senderOutboundQueue,
     recipients: ["eve@stealth.xyz"],
@@ -644,8 +629,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-14",
     threadId: "thread-14",
     subject: "SMTP bridge warning",
-    snippet:
-      "This message was bridged from SMTP and cannot be fully verified...",
+    snippet: "This message was bridged from SMTP and cannot be fully verified...",
     body: "This message was bridged from SMTP and cannot be fully verified.\n\nThe sender domain passed standard checks, but there is no Stellar signature attached.",
     sender: senderLegacyBridge,
     recipients: ["eve@stealth.xyz"],
@@ -677,8 +661,7 @@ export const inboxSeedMessages: DemoMessage[] = [
     id: "seed-msg-16",
     threadId: "thread-16",
     subject: "Your sign-in passkey",
-    snippet:
-      "Use the one-time code below to finish signing in to your account...",
+    snippet: "Use the one-time code below to finish signing in to your account...",
     body: "Hi Eve,\n\nWe received a sign-in request from a new device. Use the one-time passkey below to complete verification.\n\nYour OTP code: 371 400\n\nThis code expires in 10 minutes. If you didn't request this, you can safely ignore the message.\n\n— Stealth Security",
     sender: senderSecurity,
     recipients: ["eve@stealth.xyz"],
