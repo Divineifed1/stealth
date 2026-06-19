@@ -282,17 +282,13 @@ export {
 } from "./constants/displayTokens";
 
 export {
-  MESSAGE_FOLDERS,
-  DEFAULT_MESSAGE_FOLDER,
-  MESSAGE_FIELDS,
-  getMessageField,
-  createEmptyMessage,
-} from "./constants/messageListEditorModel";
-export type {
-  MessageFolder,
-  MessageFieldKey,
-  MessageFieldType,
-  EditableMessage,
-  MessageFieldMeta,
-} from "./constants/messageListEditorModel";
-export { messageListFixtures } from "./fixtures/messageListFixtures";
+  DEMO_FOLDERS,
+  MAILBOX_GROUPS,
+  FOLDER_DEFINITIONS,
+  DEFAULT_FOLDER,
+  getFolderDefinition,
+  getFoldersForGroup,
+} from "./constants/folderTaxonomy";
+export type { DemoFolder, MailboxGroup, FolderDefinition } from "./constants/folderTaxonomy";
+export { FolderTaxonomySelector } from "./components/FolderTaxonomySelector";
+export type { FolderTaxonomySelectorProps } from "./components/FolderTaxonomySelector";
