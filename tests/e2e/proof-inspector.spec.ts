@@ -68,14 +68,17 @@ test.describe("proof inspector", () => {
 
     await expect(page.getByText("Copy Proof Diagnostic Report")).toBeVisible();
     await expect(page.getByText("Stellar.Expert")).toBeVisible();
-    await expect(page.getByText("Open Message")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Open Message" })).toBeVisible();
   });
 
   test("closes on backdrop click", async ({ page }) => {
     await page.getByRole("button", { name: "Proof Inspector" }).click();
     await expect(page.getByRole("dialog", { name: "Cryptographic proof inspector" })).toBeVisible();
 
-    await page.locator(".fixed.inset-0").click({ position: { x: 10, y: 10 } });
+    await page
+      .locator(".fixed.inset-0")
+      .filter({ hasNot: page.locator(".pointer-events-none") })
+      .click({ position: { x: 10, y: 10 } });
     await expect(
       page.getByRole("dialog", { name: "Cryptographic proof inspector" }),
     ).not.toBeVisible();
