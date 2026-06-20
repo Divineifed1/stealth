@@ -176,7 +176,7 @@ export function SettingsModal({
               <button
                 onClick={dismiss}
                 aria-label="Close settings"
-                className="glow-ring rounded-lg p-1.5 text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground"
+                className="glow-ring rounded-lg p-1.5 text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground active:scale-95"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -210,7 +210,7 @@ export function SettingsModal({
                         tabIndex={isActive ? 0 : -1}
                         onClick={() => setActiveTab(tab.id)}
                         className={cn(
-                          "glow-ring flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition",
+                          "glow-ring flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition active:scale-[0.98]",
                           isActive
                             ? "bg-white/[0.08] text-foreground"
                             : "text-muted-foreground hover:bg-white/[0.04] hover:text-foreground",
@@ -269,7 +269,7 @@ export function SettingsModal({
               <div className="flex items-center gap-2">
                 <button
                   onClick={onCancel ?? onClose}
-                  className="rounded-lg border border-white/10 px-4 py-2 text-xs font-semibold text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground"
+                  className="rounded-lg border border-white/10 px-4 py-2 text-xs font-semibold text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground active:scale-[0.98]"
                 >
                   Cancel
                 </button>
@@ -278,7 +278,7 @@ export function SettingsModal({
                     onSave();
                     onClose();
                   }}
-                  className="rounded-lg bg-foreground px-4 py-2 text-xs font-semibold text-background transition hover:opacity-90"
+                  className="rounded-lg bg-foreground px-4 py-2 text-xs font-semibold text-background transition hover:opacity-90 active:scale-[0.98]"
                 >
                   Save changes
                 </button>
@@ -457,7 +457,7 @@ function SegmentedSetting({
               tabIndex={checked ? 0 : -1}
               onClick={() => onSelect(optionValue)}
               className={cn(
-                "glow-ring rounded-lg border px-4 py-2 text-xs transition",
+                "glow-ring rounded-lg border px-4 py-2 text-xs transition active:scale-[0.97]",
                 checked
                   ? "border-white/20 bg-white/[0.08] text-foreground shadow-[var(--shadow-glow)]"
                   : "border-white/5 text-muted-foreground hover:border-white/10 hover:text-foreground",
@@ -1466,7 +1466,7 @@ function SettingsToggle({
         aria-checked={checked}
         aria-label={label}
         className={cn(
-          "glow-ring relative h-6 w-11 rounded-full transition",
+          "glow-ring relative h-6 w-11 rounded-full transition hover:brightness-125 active:scale-95",
           checked ? "bg-white/20" : "bg-white/10",
         )}
       >
