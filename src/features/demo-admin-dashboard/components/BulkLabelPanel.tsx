@@ -353,49 +353,78 @@ export function BulkLabelPanel({
 /**
  * Calculate which labels are common, partial, or available across selected messages.
  */
-function calculateLabelState(
+export function calculateLabelState(
   selectedMessages: DemoMessage[],
   availableLabels: string[]
 ): LabelState {
   if (selectedMessages.length === 0) {
-    return { common: [], partial: [], available: availableLabels };
-  }
-
-  // Count how many messages have each label
-  const labelCounts = new Map<string, number>();
-  
-  for (const message of selectedMessages) {
-    for (const label of message.labels) {
-      labelCounts.set(label, (labelCounts.get(label) || 0) + 1);
-    }
-  }
-
-  // Also include available labels that might not be on any selected message
-  for (const label of availableLabels) {
-    if (!labelCounts.has(label)) {
-      labelCounts.set(label, 0);
-    }
+    return {
+      common: [],
+      partial: [],
+      available: [...new Set(availableLabels.map((label) => normalizeLabelName(label)).filter(Boolean))].sort(),
+    };
   }
 
   const totalMessages = selectedMessages.length;
+  const labelDisplayMap = new Map<string, string>();
+  const labelCountMap = new Map<string, number>();
+  const labelIdSet = new Set<string>();
+
+  const registerLabel = (rawLabel: string) => {
+    const normalized = normalizeLabelName(rawLabel);
+    if (!normalized) {
+      return;
+    }
+
+    const id = toLabelId(normalized);
+    if (!id) {
+      return;
+    }
+
+    if (!labelDisplayMap.has(id)) {
+      labelDisplayMap.set(id, normalized);
+    }
+    labelIdSet.add(id);
+  };
+
+  for (const message of selectedMessages) {
+    const seenInMessage = new Set<string>();
+    for (const label of message.labels) {
+      const normalized = normalizeLabelName(label);
+      const id = toLabelId(normalized);
+      if (!normalized || !id || seenInMessage.has(id)) {
+        continue;
+      }
+      seenInMessage.add(id);
+      registerLabel(normalized);
+      labelCountMap.set(id, (labelCountMap.get(id) ?? 0) + 1);
+    }
+  }
+
+  for (const label of availableLabels) {
+    registerLabel(label);
+  }
+
   const common: string[] = [];
   const partial: string[] = [];
   const available: string[] = [];
 
-  for (const [label, count] of labelCounts) {
+  for (const id of labelIdSet) {
+    const count = labelCountMap.get(id) ?? 0;
+    const display = labelDisplayMap.get(id) ?? id;
+
     if (count === totalMessages) {
-      common.push(label);
+      common.push(display);
     } else if (count > 0) {
-      partial.push(label);
+      partial.push(display);
     } else {
-      available.push(label);
+      available.push(display);
     }
   }
 
-  // Sort alphabetically
-  common.sort();
-  partial.sort();
-  available.sort();
+  common.sort((a, b) => a.localeCompare(b));
+  partial.sort((a, b) => a.localeCompare(b));
+  available.sort((a, b) => a.localeCompare(b));
 
   return { common, partial, available };
 }
