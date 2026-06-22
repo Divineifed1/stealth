@@ -6,12 +6,14 @@ export interface DigestSuccessStateProps {
   digest: DailyDigest;
   tone: string;
   onReset: () => void;
+  warnings?: string[];
 }
 
 export function DigestSuccessState({
   digest,
   tone,
   onReset,
+  warnings,
 }: DigestSuccessStateProps): JSX.Element {
   return (
     <article className="idd-panel idd-success" aria-labelledby="idd-result-title">
@@ -26,6 +28,29 @@ export function DigestSuccessState({
       </div>
 
       <p className="idd-summary">{digest.summary}</p>
+
+      {warnings && warnings.length > 0 && (
+        <div
+          className="idd-warnings-box"
+          style={{
+            background: "#fffaf0",
+            border: "1px solid #feebc8",
+            borderRadius: "6px",
+            padding: "0.75rem",
+            color: "#c05621",
+            fontSize: "0.85rem",
+          }}
+        >
+          <span style={{ fontWeight: 700, display: "block", marginBottom: "0.25rem" }}>
+            Processing Notes ({warnings.length})
+          </span>
+          <ul style={{ margin: 0, paddingLeft: "1.2rem" }}>
+            {warnings.map((w, i) => (
+              <li key={i}>{w}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <dl className="idd-insights" aria-label="Digest metrics">
         {digest.insights.map((insight) => (
