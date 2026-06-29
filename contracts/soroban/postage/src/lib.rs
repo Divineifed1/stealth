@@ -1,16 +1,133 @@
 #![no_std]
 
 use soroban_sdk::{
-    contract, contracterror, contractevent, contractimpl, contracttype, symbol_short, token,
-    Address, BytesN, Env, MuxedAddress, Symbol,
-};
-use stealth_lifecycle::{
-    LifecycleContractClient, LifecycleTerminal, Postage as LifecyclePostage,
-    PostageStatus as LifecyclePostageStatus,
+    contract, contractclient, contracterror, contractevent, contractimpl, contracttype,
+    symbol_short, token, Address, BytesN, Env, MuxedAddress, Symbol,
 };
 
 #[contract]
 pub struct PostageContract;
+
+mod lifecycle_guard {
+    use super::*;
+
+    #[contracttype]
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    pub enum PolicyReason {
+        SenderAllowed,
+        SenderBlocked,
+        UnknownSendersDisabled,
+        VerificationRequired,
+        ReceiptRequired,
+        InsufficientPostage,
+        PolicySatisfied,
+        TierSatisfied,
+    }
+
+    #[contracttype]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    pub struct Postage {
+        pub sender: Address,
+        pub recipient: Address,
+        pub amount: i128,
+        pub fee: i128,
+        pub created_at: u64,
+        pub expires_at: u64,
+        pub dispute_until: u64,
+        pub status: PostageStatus,
+    }
+
+    #[contracttype]
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    pub enum PostageStatus {
+        Pending,
+        Expired,
+        Disputed,
+        Settled,
+        Refunded,
+        Reclaimed,
+    }
+
+    #[contracttype]
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    pub enum LifecycleTerminal {
+        Open,
+        Delivered,
+        Read,
+        Settled,
+        Refunded,
+        Disputed,
+        Expired,
+        Reclaimed,
+    }
+
+    #[contracttype]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    pub struct LifecycleRecord {
+        pub message_id: BytesN<32>,
+        pub owner: Address,
+        pub sender: Address,
+        pub recipient: Address,
+        pub amount: i128,
+        pub verified: bool,
+        pub receipt_required: bool,
+        pub policy_version: u32,
+        pub decision_reason: PolicyReason,
+        pub payload_hash: Option<BytesN<32>>,
+        pub protocol_version: Option<u32>,
+        pub delivered_at: Option<u64>,
+        pub read_at: Option<u64>,
+        pub terminal: LifecycleTerminal,
+        pub bound_at: u64,
+    }
+
+    #[contracterror]
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    #[repr(u32)]
+    pub enum LifecycleError {
+        AlreadyInitialized = 1,
+        NotInitialized = 2,
+        UnauthorizedContract = 3,
+        PolicyRejected = 4,
+        PolicyVersionMismatch = 5,
+        PostageMismatch = 6,
+        ReceiptMismatch = 7,
+        MissingLifecycle = 8,
+        TerminalStateMismatch = 9,
+        DuplicateLifecycle = 10,
+        AlreadyDelivered = 11,
+        AlreadyRead = 12,
+    }
+
+    #[contractclient(name = "LifecycleContractClient")]
+    pub trait LifecycleContractInterface {
+        fn verify_settle(
+            message_id: BytesN<32>,
+            postage: Postage,
+        ) -> Result<LifecycleRecord, LifecycleError>;
+        fn verify_refund(
+            message_id: BytesN<32>,
+            postage: Postage,
+        ) -> Result<LifecycleRecord, LifecycleError>;
+        fn verify_dispute(
+            message_id: BytesN<32>,
+            postage: Postage,
+        ) -> Result<LifecycleRecord, LifecycleError>;
+        fn verify_expire(
+            message_id: BytesN<32>,
+            postage: Postage,
+        ) -> Result<LifecycleRecord, LifecycleError>;
+        fn verify_reclaim(
+            message_id: BytesN<32>,
+            postage: Postage,
+        ) -> Result<LifecycleRecord, LifecycleError>;
+    }
+}
+
+use lifecycle_guard::{
+    LifecycleContractClient, LifecycleTerminal, Postage as LifecyclePostage,
+    PostageStatus as LifecyclePostageStatus,
+};
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]

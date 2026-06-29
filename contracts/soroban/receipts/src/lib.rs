@@ -1,15 +1,106 @@
 #![no_std]
 
 use soroban_sdk::{
-    contract, contracterror, contractevent, contractimpl, contracttype, symbol_short, Address,
+    contract, contractclient, contracterror, contractevent, contractimpl, contracttype, Address,
     BytesN, Env,
-};
-use stealth_lifecycle::{
-    LifecycleContractClient, ReceiptState as LifecycleReceiptState,
 };
 
 #[contract]
 pub struct ReceiptsContract;
+
+mod lifecycle_guard {
+    use super::*;
+
+    #[contracttype]
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    pub enum PolicyReason {
+        SenderAllowed,
+        SenderBlocked,
+        UnknownSendersDisabled,
+        VerificationRequired,
+        ReceiptRequired,
+        InsufficientPostage,
+        PolicySatisfied,
+        TierSatisfied,
+    }
+
+    #[contracttype]
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    pub enum LifecycleTerminal {
+        Open,
+        Delivered,
+        Read,
+        Settled,
+        Refunded,
+        Disputed,
+        Expired,
+        Reclaimed,
+    }
+
+    #[contracttype]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    pub struct LifecycleRecord {
+        pub message_id: BytesN<32>,
+        pub owner: Address,
+        pub sender: Address,
+        pub recipient: Address,
+        pub amount: i128,
+        pub verified: bool,
+        pub receipt_required: bool,
+        pub policy_version: u32,
+        pub decision_reason: PolicyReason,
+        pub payload_hash: Option<BytesN<32>>,
+        pub protocol_version: Option<u32>,
+        pub delivered_at: Option<u64>,
+        pub read_at: Option<u64>,
+        pub terminal: LifecycleTerminal,
+        pub bound_at: u64,
+    }
+
+    #[contracttype]
+    #[derive(Clone, Debug, Eq, PartialEq)]
+    pub struct ReceiptState {
+        pub message_id: BytesN<32>,
+        pub payload_hash: BytesN<32>,
+        pub protocol_version: u32,
+        pub sender: Address,
+        pub recipient: Address,
+        pub delivered_at: u64,
+        pub read_at: Option<u64>,
+    }
+
+    #[contracterror]
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    #[repr(u32)]
+    pub enum LifecycleError {
+        AlreadyInitialized = 1,
+        NotInitialized = 2,
+        UnauthorizedContract = 3,
+        PolicyRejected = 4,
+        PolicyVersionMismatch = 5,
+        PostageMismatch = 6,
+        ReceiptMismatch = 7,
+        MissingLifecycle = 8,
+        TerminalStateMismatch = 9,
+        DuplicateLifecycle = 10,
+        AlreadyDelivered = 11,
+        AlreadyRead = 12,
+    }
+
+    #[contractclient(name = "LifecycleContractClient")]
+    pub trait LifecycleContractInterface {
+        fn verify_delivered(
+            message_id: BytesN<32>,
+            receipt: ReceiptState,
+        ) -> Result<LifecycleRecord, LifecycleError>;
+        fn verify_read(
+            message_id: BytesN<32>,
+            receipt: ReceiptState,
+        ) -> Result<LifecycleRecord, LifecycleError>;
+    }
+}
+
+use lifecycle_guard::{LifecycleContractClient, ReceiptState as LifecycleReceiptState};
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -195,7 +286,7 @@ mod test {
     use super::*;
     use soroban_sdk::{
         testutils::{Address as _, AuthorizedFunction, AuthorizedInvocation, Ledger},
-        IntoVal,
+        symbol_short, IntoVal,
     };
     use stealth_lifecycle::{LifecycleContract, LifecycleContractClient};
     use stealth_policies::{MailboxPolicy, PoliciesContract, PoliciesContractClient};
