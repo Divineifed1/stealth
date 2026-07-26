@@ -82,8 +82,8 @@ These constraints are **hard requirements** before this tool touches the main ap
 ## 5. Testing & Verification Requirements
 
 Before any integration PR is approved:
-- [ ] `npm run lint` passes with zero warnings in `tools/v1/team/internal-comment-thread/**` and `src/tools/v1/team/internal-comment-thread/**`.
-- [ ] `npm run test` (Vitest) passes with no skipped tests.
-- [ ] Add a concurrency test: parallel `addComment` calls to the same thread must not lose writes.
-- [ ] Add a mutation test: `getThreadsForTarget` must not reflect fixture mutations across test cases.
-- [ ] Add a security test: comment bodies > 4 000 chars, HTML strings, and empty strings must be rejected by `service.addComment` and `service.createThread`.
+- Lint passes with zero warnings in `tools/v1/team/internal-comment-thread/**` and `src/tools/v1/team/internal-comment-thread/**`.
+- Vitest passes with no skipped tests.
+- Add a concurrency test: parallel `addComment` calls to the same thread must not lose writes.
+- Add a mutation test: `getThreadsForTarget` must not reflect fixture mutations across test cases.
+- Add a security test: comment bodies > 4 000 chars, HTML strings, and empty strings must be rejected by `service.addComment` and `service.createThread`.
